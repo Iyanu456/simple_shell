@@ -4,11 +4,11 @@
 
 ### Project details
 -----
-Welcome to the `Simple Shell` project!! This program is a simple shell that can be compiled and launched from the command line.
+This program is a simple UNIX shell that can be compiled and launched from the command line.
 
 ### How to Compile
 ---------------
-gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
+gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o shell
 
 
 ### Syntax
@@ -22,14 +22,12 @@ Brief description of every file in this repository. Subject to change.
 
 | File Name | Description |
 | --- | --- |
-| AUTHORS | Text file containing the contributing authors |
-| man_1_simple_shell | Manual page for our simple shell program |
-| README.md | This file that you are reading |
+| AUTHORS | Text file containing the authors that contributed |
 | shell.h	 | Shell header file |
 | shell.c |	Primary shell source code |
 
 ### Authors
 ---
-[Iyanu Oyerinde](https://github.com/Iyanu456)
+[Adekunle Ibukunoluwa](https://github.com/Ahavatech)
 
-[Gift Chukwudi](https://github.com/Gift111)
+[Solomon Ngwu](https://github.com/Khatchi)
