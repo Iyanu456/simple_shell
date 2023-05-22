@@ -1,44 +1,50 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 #include "shell.h"
+/**
+* main - carries out the read, execute then print output loop
+* @ac: argument count
+* @av: argument vector
+* @envp: environment vector
+*
+* Return: 0
+*/
 
-#define MAX_ARGS_SIZE 128
-
-int execute_command(char *args[]) {
-    pid_t pid;
-    int status;
-
-    pid = fork();
-
-    if (pid < 0) {
-        perror("Fork error");
-        return -1;
-    } else if (pid == 0) {
-        if (execvp(args[0], args) < 0) {
-            perror("Exec error");
-            exit(EXIT_FAILURE);
-        }
-    } else {
-        do {
-            if (waitpid(pid, &status, WUNTRACED) == -1) {
-                perror("Waitpid error");
-                return -1;
-            }
-        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
-    }
-
-    return 0;
+int main(int ac, char **av, char *envp[])
+{
+	char *line = NULL, *pathcommand = NULL, *path = NULL;
+	size_t bufsize = 0;
+	ssize_t linesize = 0;
+	char **command = NULL, **paths = NULL;
+	(void)envp, (void)av;
+	if (ac < 1)
+		return (-1);
+	signal(SIGINT, handle_signal);
+	while (1)
+	{
+		free_buffers(command);
+		free_buffers(paths);
+		free(pathcommand);
+		prompt_user();
+		linesize = getline(&line, &bufsize, stdin);
+		if (linesize < 0)
+			break;
+		info.ln_count++;
+		if (line[linesize - 1] == '\n')
+			line[linesize - 1] = '\0';
+		command = tokenizer(line);
+		if (command == NULL || *command == NULL || **command == '\0')
+			continue;
+		if (checker(command, line))
+			continue;
+		path = find_path();
+		paths = tokenizer(path);
+		pathcommand = test_path(paths, command[0]);
+		if (!pathcommand)
+			perror(av[0]);
+		else
+			execution(pathcommand, command);
+	}
+	if (linesize < 0 && flags.interactive)
+		write(STDERR_FILENO, "\n", 1);
+	free(line);
+	return (0);
 }
-
-int handle_redirection(char *args[], int arg_count) {
-    return 0;
-}
-
-int handle_piping(char *args[], int arg_count) {
-    return 0;
-}
-
